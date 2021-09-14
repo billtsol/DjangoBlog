@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock title %}
+{% block classActiveLog %} active {% endblock classActiveLog %}
+{% block content %}
+{% load static %}
+<main class="dark-theme-bg">
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-lg-8 col-xl-6 mx-auto">
+                    <div class="p-4 p-sm-5 bg-primary-soft rounded ">
+                        {% if success %}
+                        <div class="alert alert-primary alert-dismissible" role="alert" id="liveAlert">
+                            <strong>Nice!</strong> success.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% elif passwordnotsame %}
+                        <div class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
+                            <strong>Nice!</strong> passwrod .
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        {% elif isIn %}
+                        <div class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
+                            <strong>Nice!</strong> email is used .
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% elif small %}
+                        <div class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
+                            <strong>Nice!</strong> pass is small .
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% elif notValid %}
+                        <div class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
+                            <strong>Nice!</strong> email not.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        <h2 class="dark-theme-color">Create your free account</h2>
+                        <form class="mt-4" name="login" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label dark-theme-color" for="exampleInputEmail1">
+                                    {{ form.email.label}}
+                                </label>
+                                {{ form.email }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label dark-theme-color" for="exampleInputEmail1">
+                                    {{ form.password1.label}}
+                                </label>
+                                {{form.password1}}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label dark-theme-color" for="exampleInputEmail1">
+                                    {{ form.password2.label}}
+                                </label>
+                                {{form.password2}}
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-success">Register</button>
+                                </div>
+                                <div class="col-sm-8 text-sm-end">
+                                    <span>Have an account? <a href="{% url 'Login' %}"><u>Sign in</u></a></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}

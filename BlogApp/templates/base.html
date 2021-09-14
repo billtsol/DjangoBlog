@@ -1,0 +1,224 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="theme-light">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} {% endblock title %}</title>
+
+    <link rel="shortcut icon" href="{% static 'parrot.ico' %}" />
+    <!-- AJAX-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- CSS style -->
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link id="style-switch" rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+</head>
+<body class="dark-theme-bg">
+    <header class="navbar-light navbar-sticky header-static dark-theme-bg">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'Home' %}">
+                    <img class="navbar-brand-item light-mode-item" src="{% static 'img/logo.svg' %}" alt="logo">
+                </a>
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="text-body h6 d-none d-sm-inline-block dark-theme-color fw-normal fs-5">Menu</span>
+                    <i class="fas fa-bars dark-theme-color"></i>
+                </button>
+                <div class="collapse navbar-collapse dark-theme-bg" id="navbarCollapse">
+                    <ul class="navbar-nav navbar-nav-scroll mx-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dark-theme-color {% block classActiveHome %} {% endblock classActiveHome %}"
+                                href="{% url 'Home' %}" id="homeMenu" aria-expanded="false">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <span
+                                class="nav-link dark-theme-color {% block classActiveNews %} {% endblock classActiveNews %}"
+                                id="pagesMenu" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">Categories
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                            <ul class="dropdown-menu black-theme-bg" aria-labelledby="pagesMenu">
+                                {% for cat in categories %}
+                                <li>
+                                    <a class="dropdown-item  dark-theme-colorA"
+                                        href="{% url 'categoryView' cat.name %}">{{ cat.name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dark-theme-color {% block classActivePosts %} {% endblock classActivePosts %}"
+                                href="{% url 'posts' %}" id="postMenu" aria-expanded="false">Post</a>
+                        </li>
+                        <li class="nav-item dropdown dropdown-fullwidth">
+                            <a class="nav-link dark-theme-color {% block classActiveContact %} {% endblock classActiveContact %}"
+                                href="{% url 'Contact' %}" id="megaMenu" aria-expanded="false"> Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link dark-theme-color {% block classActiveAbout %} {% endblock classActiveAbout %}"
+                                href="{% url 'AboutUs' %}" id="megaMenu" aria-expanded="false"> About us</a>
+                        </li>
+
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link dark-theme-color" href="{% url 'logOutUser' %}"
+                                aria-expanded="false">LogOut {{user.username}}</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link dark-theme-color {% block classActiveLog %} {% endblock classActiveLog %}"
+                                href="{% url 'Register' %}" id="megaMenu" aria-expanded="false">
+                                LogIn / Register
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="nav flex-nowrap align-items-center">
+                    <div class="nav-item dropdown dropdown-toggle-icon-none nav-search">
+                        <a class="nav-link dropdown-toggle" role="button" href="#" id="navSearch"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-search dark-theme-colorp"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end shadow rounded p-2 " aria-labelledby="navSearch">
+                            <form class="input-group">
+                                <input class="form-control border-success" type="search" placeholder="Search"
+                                    aria-label="Search">
+                                <button class="btn btn-success m-0" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="theme-container">
+                    <label id="theme-switch" class="theme-switch">
+                        <input type="checkbox" onchange="toggleTheme()" id="theme-slider">
+                        <span class="theme-slider theme-round"></span>
+                    </label>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% block content %}
+
+    {% endblock content %}
+    <footer class="pb-0 end-footer1">
+        <div class="container">
+            <div class="row pt-5">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <img class="light-mode-item" src="{% static 'img/logo.svg' %}" alt="logo">
+                    <p class="mt-3">
+                        The next-generation blog, news, and magazine theme for you to start sharing your stories
+                        today! This Bootstrap 5 based theme is ideal for all types of sites that deliver the news.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h5 class="mb-4 text-white">Navigation</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="nav flex-column">
+                                {% for item in footer %}
+                                {% if forloop.counter <= 4%}
+                                <li class="nav-item">
+                                    <a class="nav-link pt-0" href="{{item.urls}}">
+                                        {{ item.title }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="nav flex-coldjango static url in javascriptumn">
+                                {% for item in footer %}
+                                    {% if forloop.counter > 4%}
+                                    <li class="nav-item">
+                                        <a class="nav-link pt-0" href="{{item.urls}}">{{ item.title }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3 mb-4">
+                    <h5 class="mb-4 text-white">Browse by Tag</h5>
+                    <ul class="list-inline">
+                        {% for cat in categories %}
+                        <li class="list-inline-item">
+                            <a href="{% url 'categoryView' cat.name %}"
+                                class="btn btn-sm btn-{{cat.color}}-soft">
+                                {{ cat.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-2 mb-4">
+                    <h5 class="mb-4 text-white">Our Social handles</h5>
+                    <ul class="nav flex-column">
+                        {% for socia in social %}
+                        <li class="nav-item">
+                            <a class="nav-link pt-0" href="{{ socia.urls }}">
+                                <i class="{{ socia.iclass }}"></i>
+                                {{ socia.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="bg-dark mt-3 end-footer">
+            <div class="container">
+                <div class="row align-items-center justify-content-md-between py-4">
+                    <div class="col-md-6">
+                        <div class="text-center text-md-start text-muted">©2021 BillTsol All rights reserved
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-sm-flex align-items-center justify-content-center justify-content-md-end">
+                        <ul class="nav text-center text-sm-end justify-content-center justify-content-center mt-3 mt-md-0">
+                            <li class="nav-item"><a class="nav-link" href="#">Terms</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Privacy</a></li>
+                            <li class="nav-item"><a class="nav-link pe-0" href="#">Cookies</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <button class="" onclick="topFunction();" id="myBtnToTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Back to top-->
+    <script>
+        var mybutton = document.getElementById("myBtnToTop");
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <!-- scripts -->
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script src="{% static 'js/functions.js' %}"></script>
+</body>
+</html>

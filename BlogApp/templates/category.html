@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock title %}
+{% block classActiveNews %}active{% endblock classActiveNews %}
+{% block content %}
+{% load static %}
+<style>
+#scrollItem {
+	display: flex;
+	justify-content: center;
+}
+#nomore{
+	color:#000;
+	font-size:20px;
+}
+</style>
+<main class="dark-theme-bg">
+	<section class="pt-4 dark-theme-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="card card-overlay-bottom h-300 overflow-hidden text-center"
+						style="background-image:url({% static 'img/aboutImg.jpg' %}); background-position: center left; background-size: cover;">
+						<div class="card-img-overlay d-flex align-items-center p-3 pb-4 px-sm-5">
+							<div class="col-12 mt-auto d-md-flex justify-content-between align-items-center">
+								<h1 class="text-white display-5 dark-theme-color">Post overlay</h1>
+								<nav class="d-flex justify-content-center" aria-label="breadcrumb">
+									<ol class="breadcrumb breadcrumb-dots mb-0">
+										<li class="breadcrumb-item "><a href="index.html" class="text-white">Home</a>
+										</li>
+										<li class="breadcrumb-item text-white">All post</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="position-relative pt-0">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 infinite-container">
+					{% for post in posts %}
+					<div class="card border rounded-3 up-hover p-4 mb-4 dark-theme-bg infinite-item">
+						<div class="row g-3">
+							<div class="col-lg-5">
+								{% for cat in post.post_category.all %}
+								<a href="#" class="badge {{cat.color}}-Cat mb-2">
+									<i class="fas fa-circle me-2 small fw-bold"></i>{{ cat }}
+								</a>
+								{% endfor %}
+								<h2 class="card-title dark-theme-color">
+									<a href="{% url 'postView' post.id %}" class="btn-link text-reset stretched-link">
+										{{ post.title }}
+									</a>
+								</h2>
+								<div class="d-flex align-items-center position-relative mt-3">
+									<div class="avatar me-2">
+										<img class="avatar-img rounded-circle" src="{{post.author.image.url}}" alt="avatar">
+									</div>
+
+									<div>
+										<h5 class="mb-1 dark-theme-colorp">
+											<a href="#" class="stretched-link text-reset btn-link">
+												{{ post.author.username }}
+											</a>
+										</h5>
+
+										<ul class="nav align-items-center small">
+											<li class="nav-item me-3 dark-theme-colorp">
+												{{ post.created.date }}
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 col-lg-4 dark-theme-colorp">
+								<p>{{ post.desc }}</p>
+							</div>
+
+							<div class="col-md-6 col-lg-3">
+								<img class="rounded-3" src="{{post.image.url}}" alt="Card image">
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div id="scrollItem">  
+				<nav class="my-5 d-md-flex justify-content-center" aria-label="navigation">
+					{% if posts.has_next %}
+						<a class="infinite-more-link" href="?page={{posts.next_page_number}}"></a>
+					{% endif %}
+
+					{% if posts.has_next %}
+					<div class="loading spinner-border text-primary border-5" id="scrollItem" role="status">
+						<span class="visually-hidden"></span>
+					</div>
+					{% else %}
+					<div class="text-primary border-5" id="scrollItem" role="status">
+						<span class="">No more posts</span>
+					</div>
+					{% endif %}
+
+				</nav>
+			</div>  
+		</div>
+	</section>
+</main>
+
+<script src="{% static "js/jquery.waypoints.min.js" %}"></script>
+<script src="{% static "js/infinite.min.js" %}"></script>
+<script>
+	var infinite = new Waypoint.Infinite({
+		element: $('.infinite-container')[0],
+		offset: 'bottom-in-view',
+
+		onBeforePageLoad: function (){
+			$('.loading').show();
+		},
+
+		onAfterPageLoad: function () {
+			$('.loading').hide();
+		}
+	});
+</script>
+{% endblock content %}

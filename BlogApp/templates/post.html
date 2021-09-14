@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock title %}
+{% block classActivePosts %}active{% endblock classActivePosts %}
+{% block content %}
+{% load static %}
+<style>
+#scrollItem{
+	display:flex;
+	justify-content:center;
+}
+</style>
+<main class="dark-theme-bg">
+	<section class="pt-4 dark-theme-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="card card-overlay-bottom h-300 overflow-hidden text-center"
+						style="background-image:url({% static 'img/aboutImg.jpg' %}); background-position: center left; background-size: cover;">
+						<div class="card-img-overlay d-flex align-items-center p-3 pb-4 px-sm-5">
+							<div class="col-12 mt-auto d-md-flex justify-content-between align-items-center">
+								<h1 class="text-white display-5 dark-theme-color">Post overlay</h1>
+								<nav class="d-flex justify-content-center" aria-label="breadcrumb">
+									<ol class="breadcrumb breadcrumb-dots mb-0">
+										<li class="breadcrumb-item "><a href="index.html" class="text-white">Home</a>
+										</li>
+										<li class="breadcrumb-item text-white">All post</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="position-relative p-0 dark-theme-bg">
+		<div class="container">
+			<div class="row g-4 infinite-container">
+				{% for post in allPosts %}
+				<div class="col-md-6 infinite-item">
+					<div class="card card-overlay-bottom card-img-scale">
+						<img class="card-img" src="{{post.image.url}}" alt="">
+						<div class="card-img-overlay d-flex align-items-center p-3 p-sm-5">
+							<div class="w-100 mt-auto">
+								<div class="col">
+									{% for cat in post.category.all %}
+									<a href="#" class="badge {{cat.color}}-Cat mb-2">
+										<i class="fas fa-circle me-2"></i>{{ cat }}
+									</a>
+									{% endfor %}
+									<h2 class="text-white card-title h4">
+										<a href="{% url 'postView' post.id %}"
+											class="btn-link text-reset stretched-link fw-normal">
+											{{ post.title }}
+										</a>
+									</h2>
+									<ul class="nav nav-divider text-white-force align-items-center d-none d-sm-inline-block">
+										<li class="nav-item m-0">
+											<div class="nav-link">
+												<div class="d-flex align-items-center text-white position-relative">
+													<div class="avatar avatar-sm">
+														<img class="avatar-img rounded-circle" src="{{post.author.image.url}}" alt="avatar">
+													</div>
+													<span class="ms-2">by 
+														<a href="#" class="stretched-link text-reset btn-link">
+															{{ post.author.username }}
+														</a>
+													</span>
+												</div>
+											</div>
+										</li>
+										<li class="nav-item m-0">{{ post.created.date }}</li>
+										<li class="nav-item m-0">
+											<a href="#" class="btn-link">
+												<i class="fas fa-comment-alt me-1"></i> 
+												{{ post.commentCount }} Comments
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+			<div id="scrollItem">  
+				<nav class="my-5 d-md-flex justify-content-center" aria-label="navigation">
+					{% if allPosts.has_next %}
+						<a class="infinite-more-link" href="?page={{allPosts.next_page_number}}"></a>
+					{% endif %}
+
+					{% if allPosts.has_next %}
+					<div class="loading spinner-border text-primary border-5" id="scrollItem" role="status">
+						<span class="visually-hidden"></span>
+					</div>
+					{% else %}
+					<div class="text-primary border-5" id="scrollItem" role="status">
+						<span class="">No more posts</span>
+					</div>
+					{% endif %}
+				</nav>
+			</div>  
+		</div>
+	</section>
+</main>
+
+<script src="{% static "js/jquery.waypoints.min.js" %}"></script>
+<script src="{% static "js/infinite.min.js" %}"></script>
+<script>
+	var infinite = new Waypoint.Infinite({
+		element: $('.infinite-container')[0],
+		offset: 'bottom-in-view',
+		
+		onBeforePageLoad: function () {
+			$('.loading').show();
+		},
+
+		onAfterPageLoad: function () {
+			$('.loading').hide();
+		}
+	});
+</script>
+{% endblock content %}

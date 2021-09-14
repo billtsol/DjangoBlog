@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock title %}
+{% block classActivePosts %}active{% endblock classActivePosts %}
+
+{% block content %}
+{% load static %}
+<style>
+.fontStyle{
+font-family:cursive,Arial!important;
+	
+}
+</style>
+<main class="dark-theme-bg">
+	<section class="pt-2 dark-theme-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="card bg-dark-overlay-5 overflow-hidden card-bg-scale h-300 text-center"
+						style="background-image:url('{% static  postDetail.post_image %}'); background-position: center left; background-size: cover;">
+						<div class="card-img-overlay d-flex align-items-center p-3 p-sm-4">
+							<div class="w-100 my-auto">
+								{% for cat in postDetail.post_category.all %}
+								<a href="#" class="badge {{cat.categoryF_color}}-Cat mb-2">
+									<i class="fas fa-circle me-2 small"></i>
+									{{ cat }}
+								</a>
+								{% endfor %}
+								<h2 class="text-white display-5 dark-theme-color">
+									{{ postDetail.post_title }}
+								</h2>
+
+								<ul class="nav nav-divider text-white-force align-items-center justify-content-center">
+									<li class="nav-item">
+										<div class="nav-link">
+											<div class="d-flex align-items-center text-white position-relative">
+												<div class="avatar avatar-sm">
+													<img class="avatar-img rounded-circle"
+														src="{% static postDetail.post_author.author_picture %}"
+														alt="avatar">
+												</div>
+												<span class="ms-3">by
+													<a href="#" class="stretched-link text-reset btn-link">
+														{{ postDetail.post_author.userName }}
+													</a>
+												</span>
+											</div>
+										</div>
+									</li>
+									<li class="nav-item">{{ postDetail.post_timeDate.date }}</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="pt-0 dark-theme-bg">
+		<div class="container position-relative" data-sticky-container>
+			<div class="row dark-theme-color">
+				<div class="col-lg-9 mb-5">
+					<p> {{ postDetail.post_desc }}</p>
+					<div class="dark-theme-color postBody">
+						{{ PostBody }}
+					</div>
+					<div class="mt-5">
+						<h3 class="dark-theme-color">{{ postDetail.post_comments }} Comments</h3>
+						
+						{% for comment in postDetail.comments.all %}
+							<div class="my-4 d-flex">
+
+								<div class="avatar avatar-md rounded-circle float-start me-3">
+									<div class="avatar-img rounded-circle bg-warning">
+										<span class="text-dark pt-2 position-absolute top-50 start-50 translate-middle fw-bold fs-1 fontStyle">
+											{{comment.comment_user.capitalize|slice:"1"}}
+										</span>
+									</div>
+								</div>
+								<div>
+									<div class="mb-2">
+										<h5 class="m-0 dark-theme-color">{{comment.comment_user}}</h5>
+										<span class="me-3 small dark-theme-color">{{comment.comment_date}}</span>
+									</div>
+									<p class="dark-theme-color">
+										{{comment.comment_body}}
+									</p>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					{% if user.is_authenticated %} 
+						<div>
+							<h3 class="dark-theme-color">Leave a reply</h3>
+							<form class="row g-3 mt-2" method="post" name="comment">
+							{% csrf_token %}
+								<div class="col-12">
+									<label class="form-label dark-theme-color">Your Comment *</label>
+									{{ form.commentMessage}}
+								</div>
+								<div class="col-12">
+									<button type="submit" class="btn btn-primary">Post comment</button>
+								</div>
+							</form>
+						</div>
+					{% else %}
+					<div>
+						<h3 class="dark-theme-color">Leave a reply</h3>
+						<form class="row g-3 mt-2">
+							<div class="col-12">
+								<label class="form-label dark-theme-color">Your Comment *</label>
+								<textarea class="form-control" rows="3" disabled placeholder="You need accouct"></textarea>
+							</div>
+							<div class="col-12">
+								<button type="submit" class="btn btn-primary" disabled>Post comment</button>
+							</div>
+						</form>
+					</div>
+					{% endif %}
+				</div>
+				<div class="col-lg-3">
+					<div data-sticky data-margin-top="80" data-sticky-for="991">
+						<div class="row g-2">
+							<h5 class="dark-theme-color">Categories</h5>
+							{% for cat in categories.all %}
+							<div
+								class="d-flex justify-content-center align-items-center bg-primary-soft rounded p-2 position-relative">
+								<h6 class="m-0"><a href="{% url 'categoryView' cat.category_name %}"
+										class="badge {{cat.categoryF_color}}-Cat stretched-link p-2">
+										<i class="fas fa-circle me-2 small"></i>{{ cat }}
+									</a>
+								</h6>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+{% endblock content %}
